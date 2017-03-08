@@ -4,14 +4,14 @@ Simiple tool to check the memory usage per processes based on name to quickly id
  - Gives a percentage of memory used by each process compared to the total system memory
 
 ## Example
-...
+```
 -$ mem-check.sh terminator chrome firefox
   terminator:	2.2%	(175.2 MB)
   chrome:	20.5%	(1632.8 MB)
   firefox:	6.2%	(493.8 MB)
-...
+```
 
 ## Usage
-...
+```
   Usage: mem-check.sh <list of process names separated by a space>
-...
+```
