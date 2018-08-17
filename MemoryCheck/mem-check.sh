@@ -10,13 +10,27 @@ if [ $# -lt 1 ]; then
 fi
 
 # Set the passed all the arguments passed as an array
-ary_process=( $@ )
+ary_user_search=( $@ )
+
+# Grab the unique names of all the running processes
+ary_running_process=( $( ps axo comm | sort | uniq ) )
 
 # Grab total memory using `free`
 total_memory=$(free -m | grep "Mem:" | awk '{print $2}')
 
+# Find the real process names which correlate with the user's request
+ary_user_process=()
+for mysearch in ${ary_user_search[@]}; do
+	ary_user_process+=( $(echo -e ${ary_running_process[@]} | tr ' ' '\n' | grep -i ${mysearch}) )
+done
+
+# Labels
+printf "%25s" "PROCESS_NAME"
+printf "%10s" "USED_%"
+printf "%20s\n" "USED_MB"
+
 # Cycle through each of the arguments passed and process them
-for my_process in ${ary_process[@]}; do
+for my_process in ${ary_user_process[@]}; do	
 	count=0
 
 	# Use PS to find the % of memory used and then add to the total
@@ -24,12 +38,14 @@ for my_process in ${ary_process[@]}; do
 		count=$(echo "scale=1; ${count} + ${mynum}" | bc)
 	done
 
-	# Computer the processes actual memory usage based
+	# Compute the processes actual memory usage based
 	used_memory=$(echo "scale=1; (${total_memory} * ${count}) / 100" | bc)
 
 	# Return the values to a percentage and output
-	echo -e "  ${my_process}:\t${count}%\t(${used_memory} MB)"
-
+	printf "%25s" "${my_process}:"
+	printf "%10s" "${count}"
+	printf "%20s\n" "${used_memory}"
+	#echo -e "  ${my_process}:\t${count}%\t(${used_memory} MB)"
 done
 
 exit 0
