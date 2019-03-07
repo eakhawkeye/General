@@ -34,26 +34,29 @@ done
 if ${show_header}; then
 	printf "%25s" "PROCESS_NAME"
 	printf "%10s" "USED_%"
-	printf "%20s\n" "USED_MB"
+	printf "%20s" "USED_MB"
+	printf "%14s\n" "PROC_COUNT"
 fi
 
 # Cycle through each of the arguments passed and process them
-for my_process in ${ary_user_process[@]}; do	
-	count=0
+for my_process in ${ary_user_process[@]}; do
+	process_count=0
+	percent_total=0
 
-	# Use PS to find the % of memory used and then add to the total
-	for mynum in $(ps axo pmem,comm | grep -v grep | grep "${my_process}" | awk '{print $1}' | grep [0-9] ); do 
-		count=$(echo "scale=1; ${count} + ${mynum}" | bc)
+	# Use PS to find the % of memory used and then add to the total - using bc for fp percision
+	for process_percent in $(ps axo pmem,comm | grep -v grep | grep "${my_process}" | awk '{print $1}' | grep [0-9] ); do 
+		percent_total=$(echo "scale=1; ${percent_total} + ${process_percent}" | bc)
+		((process_count++))
 	done
 
 	# Compute the processes actual memory usage based
-	used_memory=$(echo "scale=1; (${total_memory} * ${count}) / 100" | bc)
+	used_memory=$(echo "scale=1; (${total_memory} * ${percent_total}) / 100" | bc)
 
 	# Return the values to a percentage and output
 	printf "%25s" "${my_process}:"
-	printf "%10s" "${count}"
-	printf "%20s\n" "${used_memory}"
-	#echo -e "  ${my_process}:\t${count}%\t(${used_memory} MB)"
+	printf "%10s" "${percent_total}"
+	printf "%20s" "${used_memory}"
+	printf "%14s\n" "${process_count}"
 done
 
 exit 0
