@@ -1,5 +1,5 @@
 # Linux - Memory Check
-Simple tool to check the memory usage per processes based on name to quickly identify how much memory is being used per process name. 
+Simple tool to check the memory usage per process passed to the command.
  - Combines the searched processes per name to give total value per name (ie Chrome)
  - Gives a percentage of memory used by each process compared to the total system memory
 
