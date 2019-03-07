@@ -41,5 +41,5 @@ process=firefox,memory_percent=3.9,memory_mb=310.0,process_count=1
 
 ## Usage
 ```
-  Usage: mem-check.sh [-N|-m|-c] <list of process names separated by a space>
+  Usage: mem-check.sh [-N|-m|-c] <list of process names separated by spaces>
 ```

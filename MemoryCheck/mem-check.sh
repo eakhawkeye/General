@@ -3,7 +3,7 @@
 # Dirty script to type in the name of a process and computer the total memory % used (based off `ps aux`)
 #
 
-# Header Check
+# Arguments Formatting
 show_header=true
 output_mb=false
 output_csv=false
@@ -16,7 +16,7 @@ while [[ "${1}" =~ ^- ]]; do
     esac
 done
 
-# Check for arguments passed
+# Output Help if no processes passed
 if [ $# -lt 1 ]; then
     echo "  Usage: $( basename $0 ) [-N|-m|-c] <list of process names separated by a space>"
     exit 1
@@ -37,7 +37,7 @@ for mysearch in ${ary_user_search[@]}; do
     ary_user_process+=( $(echo -e ${ary_running_process[@]} | tr ' ' '\n' | sort | uniq | grep -i ${mysearch}) )
 done
 
-# Labels
+# Output Header
 if ${show_header}; then
     printf "%25s" "PROCESS_NAME"
     printf "%10s" "USED_%"
@@ -45,7 +45,7 @@ if ${show_header}; then
     printf "%14s\n" "PROC_COUNT"
 fi
 
-# Cycle through each of the arguments passed and process them
+# Cycle through each of the arguments passed then process
 for my_process in ${ary_user_process[@]}; do
     process_count=0
     percent_total=0
@@ -56,17 +56,17 @@ for my_process in ${ary_user_process[@]}; do
         ((process_count++))
     done
 
-    # Compute the processes actual memory usage based
+    # Compute the process's actual memory usage based
     used_memory=$(echo "scale=1; (${total_memory} * ${percent_total}) / 100" | bc)
 
-    # Return the values to a percentage and output
-    if ${output_mb}; then
-        echo ${used_memory}
-    elif ${output_csv}; then
+    # Output Data
+    if ${output_csv}; then
         echo -n "process=${my_process},"
         echo -n "memory_percent=${percent_total},"
         echo -n "memory_mb=${used_memory},"
         echo "process_count=${process_count}"
+    elif ${output_mb}; then
+        echo ${used_memory}
     else
         printf "%25s" "${my_process}:"
         printf "%10s" "${percent_total}"
