@@ -3,9 +3,15 @@
 # Dirty script to type in the name of a process and computer the total memory % used (based off `ps aux`)
 #
 
+# Header Check
+if [ "${1}x" == "-Nx" ]; then
+	show_header=false
+	shift
+fi
+
 # Check for arguments passed
 if [ $# -lt 1 ]; then
-	echo "  Usage: $( basename $0 ) <list of process names separated by a space>"
+	echo "  Usage: $( basename $0 ) [-N] <list of process names separated by a space>"
 	exit 1
 fi
 
@@ -25,9 +31,11 @@ for mysearch in ${ary_user_search[@]}; do
 done
 
 # Labels
-printf "%25s" "PROCESS_NAME"
-printf "%10s" "USED_%"
-printf "%20s\n" "USED_MB"
+if ${show_header}; then
+	printf "%25s" "PROCESS_NAME"
+	printf "%10s" "USED_%"
+	printf "%20s\n" "USED_MB"
+fi
 
 # Cycle through each of the arguments passed and process them
 for my_process in ${ary_user_process[@]}; do	
