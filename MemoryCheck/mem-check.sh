@@ -5,18 +5,20 @@
 
 # Header Check
 show_header=true
-only_mb=false
+output_mb=false
+output_csv=false
 while [[ "${1}" =~ ^- ]]; do
     case "${1}" in
         '-N' ) show_header=false; shift;;
-        '-m' ) only_mb=true; show_header=false; shift;;
+        '-m' ) output_mb=true; show_header=false; shift;;
+        '-c'* ) output_csv=true; show_header=false; shift;;
         '-'* ) shift;;
     esac
 done
 
 # Check for arguments passed
 if [ $# -lt 1 ]; then
-    echo "  Usage: $( basename $0 ) [-N|-m] <list of process names separated by a space>"
+    echo "  Usage: $( basename $0 ) [-N|-m|-c] <list of process names separated by a space>"
     exit 1
 fi
 
@@ -58,8 +60,13 @@ for my_process in ${ary_user_process[@]}; do
     used_memory=$(echo "scale=1; (${total_memory} * ${percent_total}) / 100" | bc)
 
     # Return the values to a percentage and output
-    if ${only_mb}; then
+    if ${output_mb}; then
         echo ${used_memory}
+    elif ${output_csv}; then
+        echo -n "process=${my_process},"
+        echo -n "memory_percent=${percent_total},"
+        echo -n "memory_mb=${used_memory},"
+        echo "process_count=${process_count}"
     else
         printf "%25s" "${my_process}:"
         printf "%10s" "${percent_total}"
