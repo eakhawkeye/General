@@ -13,5 +13,5 @@ Simple tool to check the memory usage per processes based on name to quickly ide
 
 ## Usage
 ```
-  Usage: mem-check.sh [-N] <list of process names separated by a space>
+  Usage: mem-check.sh [-N|-m] <list of process names separated by a space>
 ```
