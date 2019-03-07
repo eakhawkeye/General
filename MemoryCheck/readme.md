@@ -14,6 +14,7 @@ Simple tool to check the memory usage per processes based on name to quickly ide
 ```
 ###### Output: No Headers | -N
 ```
+-$ ./mem-check.sh -N terminator chrome firefox
               terminator:        .7                55.6             1
                   chrome:      32.1              2552.2            24
          chrome-gnome-sh:        .3                23.8             1
