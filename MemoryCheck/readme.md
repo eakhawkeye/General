@@ -27,11 +27,6 @@ process=terminator,memory_percent=.7,memory_mb=55.6,process_count=1
 process=chrome,memory_percent=32.1,memory_mb=2552.2,process_count=24
 process=chrome-gnome-sh,memory_percent=.3,memory_mb=23.8,process_count=1
 process=firefox,memory_percent=3.9,memory_mb=310.0,process_count=1
-[marinom@fedora29 MemoryCheck]$ ./mem-check.sh -N terminator chrome firefox
-              terminator:        .7                55.6             1
-                  chrome:      32.1              2552.2            24
-         chrome-gnome-sh:        .3                23.8             1
-                 firefox:       3.9               310.0             1
 ```
 ###### Output: MB Only | -m
 ```
