@@ -41,5 +41,10 @@ process=firefox,memory_percent=3.9,memory_mb=310.0,process_count=1
 
 ## Usage
 ```
-  Usage: mem-check.sh [-N|-m|-c] <list of process names separated by spaces>
+  Usage: mem-check.sh [-N|-m|-c] <list of process names separated by a space> | -a
+	-a	|	Show ALL processes
+	-N	|	No headers
+	-m	|	Just show MB used (includes -N functionality)
+	-c	|	Output in CSV format (includes -N functionality)
+	Sort Tip: <command> | sort -rnk 2
 ```

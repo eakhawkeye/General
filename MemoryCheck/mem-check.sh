@@ -38,7 +38,7 @@ ary_running_process=( $( ps axo comm | sort | uniq ) )
 # Set the passed all the arguments passed as an array
 ary_user_search=( $@ )
 
-
+# Set the user processes (or all)
 if ${compute_all}; then 
     ary_user_search=${ary_running_process[@]}
 else
