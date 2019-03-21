@@ -3,30 +3,47 @@
 # Dirty script to type in the name of a process and computer the total memory % used (based off `ps aux`)
 #
 
+function help_me() {
+    # Show Help and Exit
+    echo "  Usage: $( basename $0 ) [-N|-m|-c] <list of process names separated by a space> | -a"
+    echo -e "\t-a\t|\tShow ALL processes"
+    echo -e "\t-N\t|\tNo headers"
+    echo -e "\t-m\t|\tJust show MB used (includes -N functionality)"
+    echo -e "\t-c\t|\tOutput in CSV format (includes -N functionality)"
+    echo -e "\tSort Tip: <command> | sort -rnk 2"
+    exit 1
+}
+
 # Arguments Formatting
+compute_all=false
 show_header=true
 output_mb=false
 output_csv=false
 while [[ "${1}" =~ ^- ]]; do
     case "${1}" in
+        '-a' ) compute_all=true; shift;;
         '-N' ) show_header=false; shift;;
         '-m' ) output_mb=true; show_header=false; shift;;
         '-c'* ) output_csv=true; show_header=false; shift;;
-        '-'* ) shift;;
+        '-'* ) help_me; shift;;
     esac
 done
 
 # Output Help if no processes passed
-if [ $# -lt 1 ]; then
-    echo "  Usage: $( basename $0 ) [-N|-m|-c] <list of process names separated by a space>"
-    exit 1
-fi
+if [ $# -lt 1 ] && ! ${compute_all}; then help_me; fi
+
+# Grab the unique names of all the running processes
+ary_running_process=( $( ps axo comm | sort | uniq ) )
 
 # Set the passed all the arguments passed as an array
 ary_user_search=( $@ )
 
-# Grab the unique names of all the running processes
-ary_running_process=( $( ps axo comm | sort | uniq ) )
+
+if ${compute_all}; then 
+    ary_user_search=${ary_running_process[@]}
+else
+    ary_user_search=( $@ )
+fi
 
 # Grab total memory using `free`
 total_memory=$(free -m | grep "Mem:" | awk '{print $2}')
